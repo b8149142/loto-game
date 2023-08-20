@@ -705,7 +705,7 @@ function setBet(data) {
   let lotoGameInfo = document.querySelector(".loto-gameinfo");
   if (lotoGameInfo) {
     let lotoBet = lotoGameInfo.querySelector(".loto-gameinfo__bet");
-    lotoBet.querySelector("span").innerHTML = `${data.bet}p`;
+    lotoBet.querySelector("span").innerHTML = `${data.bet}М`;
   }
 }
 
