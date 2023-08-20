@@ -9,7 +9,7 @@ let activeTimers = [];
 let activeFinishTimers = [];
 
 export const connectWebsocketFunctions = () => {
-  const ws = new WebSocket(`ws://localhost:5001/game`);
+  const ws = new WebSocket(`ws://lotogame.onrender.com/game`);
   let timerStarted = false;
 
   ws.onopen = () => {
