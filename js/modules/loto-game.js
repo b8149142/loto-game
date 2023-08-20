@@ -319,12 +319,12 @@ function selectCaskByFinger(pastCasks) {
   if (ticketsBody) {
     // удалить все евент листенеры с билетов
     let pastTickets = ticketsBody.querySelectorAll(".loto-gamemain__ticket");
-    console.log(pastTickets);
+    
     let listeners = [];
     pastTickets.forEach((ticket, index) => {
       let ticketCells = ticket.querySelectorAll(".ticket-cell");
       ticketCells.forEach((cell) => {
-        console.log(cell);
+      
         cell.removeEventListener("click", listeners[index]);
       });
     });
