@@ -1,18 +1,49 @@
-.header__container {
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+      180deg,
+      rgba(159, 72, 72, 0.2) 0%,
+      rgba(159, 72, 72, 0.14) 27.6%,
+      rgba(159, 72, 72, 0.08) 60.42%,
+      rgba(159, 72, 72, 0) 100%
+    ),
+    linear-gradient(180deg, #572451 0%, rgba(71, 100, 204, 0.64) 100%);
+  min-height: 114px;
+}
+
+header .header__container {
   max-width: 1600px;
   justify-content: center;
   padding: 0 20px;
-}
-
-header {
-  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #333333;
+  margin: 0 auto;
 }
 
-header a {
+.header__logo {
+  display: block;
+  flex: 0 0 200px;
+  margin-right: 30px;
+}
+header .header__container .header__logo img {
+  max-width: 200px;
+  height: auto;
+}
+
+header .header__container .header__balance-block {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 110px;
+  /* letter-spacing: 2.2px; */
+  color: #d4ba52;
+  cursor: pointer;
+}
+
+/* header a {
   color: #fff;
 }
 
@@ -45,3 +76,33 @@ header a {
   font-size: 16px;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .header__container {
+    padding: 0 7px;
+  }
+  header {
+    min-height: 50px;
+  }
+  .header__logo {
+    font-size: 18px;
+  }
+  .header__user {
+    gap: 15px;
+  }
+
+  .header__name {
+    font-size: 16px;
+    display: none;
+  }
+  .header__user p {
+    font-size: 16px;
+  }
+
+  .header__user button {
+    padding: 7px 14px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+} */

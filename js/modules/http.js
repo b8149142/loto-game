@@ -79,8 +79,8 @@ export async function checkAuth() {
 
 export async function logout() {
   try {
-    const response = await $api.post("/logout");
     localStorage.removeItem("token");
+    const response = await $api.post("/logout");
     return await response;
   } catch (error) {
     console.log(error.response?.data?.message);
@@ -155,6 +155,28 @@ export async function deleteTicket(cardId) {
   } catch (e) {
     console.log(e.response);
     return await e.response;
+  }
+}
+
+export async function deleteTickets(roomId) {
+  try {
+    const response = await $api.delete(`/game/delete-cards?roomId=${roomId}`);
+    return await response;
+  } catch (error) {
+    console.log(e.response);
+    return await error.response;
+  }
+}
+
+export async function deleteTicketsReturnBalance(roomId, bet) {
+  try {
+    const response = await $api.delete(
+      `/game/delete-cards-balance?roomId=${roomId}&bet=${bet}`
+    );
+    return await response;
+  } catch (error) {
+    console.log(e.response);
+    return await error.response;
   }
 }
 

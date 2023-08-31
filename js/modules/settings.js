@@ -1,3 +1,5 @@
+import * as impAudio from "./audio.js";
+
 export function openSettingsPage() {
   let main = document.querySelector("main");
   if (main) {
@@ -26,11 +28,11 @@ export function openSettingsPage() {
               <div class="settings-item__sounds">
                 <div class="settings-item__sounds-item">
                   <span>Игра</span>
-                  <input type="checkbox" checked="true" />
+                  <input id="sounds-game" type="checkbox" checked="true" />
                 </div>
                 <div class="settings-item__sounds-item">
                   <span>Меню</span>
-                  <input type="checkbox" checked="true" />
+                  <input id="sounds-menu" type="checkbox" checked="true" />
                 </div>
               </div>
             </div>
@@ -38,9 +40,44 @@ export function openSettingsPage() {
         </div>
       </section>
     </div>`;
+    loadSettings();
     addListeners();
   }
 }
+
+const loadSettings = () => {
+  const color = localStorage.getItem("cask-color");
+  const soundsGame = localStorage.getItem("sounds-game");
+  const soundsMenu = localStorage.getItem("sounds-menu");
+
+  if (color) {
+    const colors = document.querySelectorAll(".settings-item__colors div");
+    colors.forEach((color) => color.classList.remove("active"));
+    colors.forEach((color) => {
+      if (color.getAttribute("color-code") === color) {
+        color.classList.add("active");
+      }
+    });
+  }
+
+  if (soundsGame) {
+    const soundsGameInput = document.querySelector("#sounds-game");
+    if (soundsGame == "false") {
+      soundsGameInput.checked = false;
+    } else {
+      soundsGameInput.checked = true;
+    }
+  }
+
+  if (soundsMenu) {
+    const soundsMenuInput = document.querySelector("#sounds-menu");
+    if (soundsMenu == "false") {
+      soundsMenuInput.checked = false;
+    } else {
+      soundsMenuInput.checked = true;
+    }
+  }
+};
 
 const addListeners = () => {
   const colors = document.querySelectorAll(".settings-item__colors div");
@@ -50,5 +87,18 @@ const addListeners = () => {
       color.classList.add("active");
       localStorage.setItem("cask-color", color.getAttribute("color-code"));
     });
+  });
+
+  const soundsGame = document.querySelector("#sounds-game");
+  const soundsMenu = document.querySelector("#sounds-menu");
+
+  soundsGame.addEventListener("change", () => {
+    localStorage.setItem("sounds-game", soundsGame.checked);
+    impAudio.setGameSoundsAllowed(soundsGame.checked);
+  });
+
+  soundsMenu.addEventListener("change", () => {
+    localStorage.setItem("sounds-menu", soundsMenu.checked);
+    impAudio.setMenuSoundsAllowed(soundsMenu.checked);
   });
 };

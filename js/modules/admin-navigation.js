@@ -2,15 +2,35 @@ import * as impHttp from "./http.js";
 import * as impPopup from "./popup.js";
 
 export function createAdminButton() {
-  // create button in header
-  const headerBlock = document.querySelector(".header__user");
-  const adminButton = document.createElement("button");
-  adminButton.classList.add("admin-button");
-  adminButton.textContent = "Admin";
-  headerBlock.appendChild(adminButton);
-  adminButton.addEventListener("click", () => {
-    redirectToAdminPage();
-  });
+  // // create button in header
+  // const headerBlock = document.querySelector(".header__user");
+  // const adminButton = document.createElement("button");
+  // adminButton.classList.add("admin-button");
+  // adminButton.textContent = "Admin";
+  // headerBlock.appendChild(adminButton);
+  // adminButton.addEventListener("click", () => {
+  //   redirectToAdminPage();
+  // });
+
+  // create button in profile
+  const profilePage = document.querySelector(".profile-page");
+  if (profilePage) {
+    const profileButtons = profilePage.querySelector(".profile__buttons.m20");
+    const exitButton = profilePage.querySelector(".profile-page__footer");
+    const adminButton = document.createElement("a");
+    adminButton.classList.add("profile__button", "curpointer");
+    adminButton.innerHTML = ` <img src="img/profile icons/profile.png" />
+    <p>АДМИН-ПАНЕЛЬ</p>
+    <img
+      src="img/profile icons/chevron-right.png"
+      alt="АДМИН-ПАНЕЛЬ"
+    />`;
+
+    profileButtons.appendChild(adminButton);
+    adminButton.addEventListener("click", () => {
+      redirectToAdminPage();
+    });
+  }
 }
 
 function addAdminFunctions() {
@@ -146,6 +166,18 @@ async function redirectToAdminPage() {
           Шанс победы, %: <input type="number" class="winChance winChance-1" step="0.01" /> (для команды ботов, от 1 до 100)
         </label>
         <br />
+        <label>
+          Джекпот:
+          <input type="number" class="jackpot jackpot-1" step="0.01" />
+        </label>
+        <br />
+        <label>
+          Количество бочек для выигрыша джекпота: 
+          <input type="number" class="maxCasksJackpot maxCasksJackpot-1" step="1" />
+        </label>
+        <br />
+        <label> <input type="checkbox" class="canBotWinJackpot canBotWinJackpot-1" /> Бот может выиграть джекпот </label>
+        <br />
         <button class="addBotBtn">Сохранить</button>
       </div>
 
@@ -164,6 +196,18 @@ async function redirectToAdminPage() {
         <label>
           Шанс победы, %: <input type="number" class="winChance winChance-2" step="0.01" /> (для команды ботов, от 1 до 100%)
         </label>
+        <br />
+        <label>
+          Джекпот:
+          <input type="number" class="jackpot jackpot-1" step="0.01" />
+        </label>        
+        <br />
+        <label>
+          Количество бочек для выигрыша джекпота: 
+          <input type="number" class="maxCasksJackpot maxCasksJackpot-2" step="1" />
+        </label>
+        <br />
+        <label> <input type="checkbox" class="canBotWinJackpot canBotWinJackpot-2" /> Бот может выиграть джекпот </label>
         <br />
         <button class="addBotBtn">Сохранить</button>
       </div>
@@ -184,6 +228,18 @@ async function redirectToAdminPage() {
           Шанс победы: <input type="number" class="winChance winChance-3" step="0.01" /> (для команды ботов, от 1 до 100%)
         </label>
         <br />
+        <label>
+          Джекпот:
+          <input type="number" class="jackpot jackpot-1" step="0.01" />
+        </label>
+        <br />
+        <label>
+          Количество бочек для выигрыша джекпота: 
+          <input type="number" class="maxCasksJackpot maxCasksJackpot-3" step="1" />
+        </label>
+        <br />
+        <label> <input type="checkbox" class="canBotWinJackpot canBotWinJackpot-3" /> Бот может выиграть джекпот </label>
+        <br />
         <button class="addBotBtn">Сохранить</button>
       </div>
 
@@ -202,6 +258,18 @@ async function redirectToAdminPage() {
         <label>
           Шанс победы: <input type="number" class="winChance winChance-3" step="0.01" /> (для команды ботов, от 1 до 100%)
         </label>
+        <br />
+        <label>
+          Джекпот:
+          <input type="number" class="jackpot jackpot-1" step="0.01" />
+        </label>
+        <br />
+        <label>
+          Количество бочек для выигрыша джекпота: 
+          <input type="number" class="maxCasksJackpot maxCasksJackpot-4" step="1" />
+        </label>
+        <br />
+        <label> <input type="checkbox" class="canBotWinJackpot canBotWinJackpot-4" /> Бот может выиграть джекпот </label>
         <br />
         <button class="addBotBtn">Сохранить</button>
       </div>
@@ -222,10 +290,20 @@ async function redirectToAdminPage() {
           Шанс победы: <input type="number" class="winChance winChance-3" step="0.01" /> (для команды ботов, от 1 до 100%)
         </label>
         <br />
+        <label>
+          Джекпот:
+          <input type="number" class="jackpot jackpot-1" step="0.01" />
+        </label>
+        <br />
+        <label>
+          Количество бочек для выигрыша джекпота: 
+          <input type="number" class="maxCasksJackpot maxCasksJackpot-5" step="1" />
+        </label>
+        <br />
+        <label> <input type="checkbox" class="canBotWinJackpot canBotWinJackpot-5" /> Бот может выиграть джекпот </label>
+        <br />
         <button class="addBotBtn">Сохранить</button>
       </div>
-
-
 
       <div class="admin-stats-container">
       <div class="admin-stats-row admin-stats-header">
@@ -285,6 +363,9 @@ async function getAdminSettings() {
       const botCountInput = room.querySelector(".botCount");
       const ticketCountInput = room.querySelector(".ticketCount");
       const winChanceInput = room.querySelector(".winChance");
+      const jackpotInput = room.querySelector(".jackpot");
+      const maxCasksJackpot = room.querySelector(".maxCasksJackpot");
+      const canBotWinJackpot = room.querySelector(".canBotWinJackpot");
 
       const roomId = room.getAttribute("roomId");
 
@@ -297,6 +378,9 @@ async function getAdminSettings() {
         botCountInput.value = roomSettings.maxBots;
         ticketCountInput.value = roomSettings.maxTickets;
         winChanceInput.value = roomSettings.winChance;
+        jackpotInput.value = roomSettings.jackpot;
+        maxCasksJackpot.value = roomSettings.maxCasksJackpot;
+        canBotWinJackpot.checked = roomSettings.canBotWinJackpot;
       }
     });
   } else {
@@ -310,12 +394,18 @@ async function setAdminSettings(roomId) {
   const botCountInput = room.querySelector(".botCount");
   const ticketCountInput = room.querySelector(".ticketCount");
   const winChanceInput = room.querySelector(".winChance");
+  const jackpotInput = room.querySelector(".jackpot");
+  const maxCasksJackpot = room.querySelector(".maxCasksJackpot");
+  const canBotWinJackpot = room.querySelector(".canBotWinJackpot");
 
   const body = {
     allowBots: botFlag.checked,
     maxBots: botCountInput.value,
     maxTickets: ticketCountInput.value,
     winChance: winChanceInput.value,
+    jackpot: jackpotInput.value,
+    maxCasksJackpot: maxCasksJackpot.value,
+    canBotWinJackpot: canBotWinJackpot.checked,
   };
 
   let response = await impHttp.setLotoSettings(roomId, body);
