@@ -17,6 +17,8 @@
   align-items: center;
 }
 .loto-room-page .room-jackpot .room-jackpot-sum {
+  min-width: 90px;
+
   display: block;
   position: relative;
   border-radius: 5px;
@@ -34,6 +36,31 @@
   margin-right: 7px;
   margin-left: 32px;
 }
+
+.room-jackpot-sum.animating {
+  animation: jackpotGameAnimation 5s infinite;
+}
+
+@keyframes jackpotGameAnimation {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(0.8);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 .loto-room-page .room-jackpot .room-jackpot-sum img {
   position: absolute;
   width: 32px;
@@ -81,6 +108,10 @@
 }
 
 /* exit button */
+.loto-room-page__exit-wrapper {
+  display: none;
+}
+
 .loto-room-page__exit-wrapper .loto-room-page__exit {
   position: relative;
   top: 0;
@@ -104,6 +135,12 @@
   flex: 0 0 50px;
   width: 50px;
   height: 35px;
+}
+
+@media (max-width: 767px) {
+  .loto-room-page__exit-wrapper {
+    display: block;
+  }
 }
 
 @media (max-width: 998px) {
@@ -204,7 +241,8 @@
 .loto-room__gameinfo .loto-gameinfo__top-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 .loto-room__gameinfo .loto-gameinfo__top-row .loto-gameinfo__top-row-item {
@@ -219,11 +257,17 @@
   font-style: normal;
   font-weight: 500;
   line-height: 18px;
+  min-width: 70px;
 }
+/* .loto-room__gameinfo
+  .loto-gameinfo__top-row
+  .loto-gameinfo__top-row-item.loto-gameinfo__bank {
+  min-width: 145px;
+} */
+
 .loto-room__gameinfo .loto-gameinfo__bottom-row {
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
   justify-content: center;
   column-gap: 30px;
 }
@@ -299,10 +343,10 @@
 
 @media (max-width: 1240px) {
   .loto-room__gameinfo {
-    max-width: 350px;
+    max-width: 370px;
   }
   .loto-room__gameinfo .loto-gameinfo__top-row .loto-gameinfo__top-row-item {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .loto-room__gameinfo
@@ -330,7 +374,7 @@
 
 @media (max-width: 998px) {
   .loto-room__gameinfo {
-    max-width: 350px;
+    max-width: 450px;
   }
   .loto-room__gameinfo .loto-gameinfo__top-row .loto-gameinfo__top-row-item {
     font-size: 20px;
@@ -367,6 +411,9 @@
   .loto-room__gameinfo .loto-gameinfo__top-row .loto-gameinfo__top-row-item {
     font-size: 16px;
   }
+  .loto-room__gameinfo {
+    max-width: 400px;
+  }
   .loto-room__gameinfo
     .loto-gameinfo__top-row
     .loto-gameinfo__top-row-item
@@ -375,9 +422,20 @@
   }
 }
 
+@media (max-width: 439px) {
+  .loto-room__gameinfo {
+    /* max-width: unset; */
+    border-radius: 0 0 10px 10px;
+  }
+  .loto-room__gameinfo .loto-gameinfo__bottom-row {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
 /* maim tickets block */
 .loto-room__main {
-  padding: 20px 0;
+  padding: 20px 0 132px 0;
   flex: 1 1 auto;
 }
 
@@ -390,11 +448,15 @@
   margin: 0 auto;
   display: flex;
   align-items: center;
-  padding: 15px 20px;
-  justify-content: space-between;
-  max-width: 400px;
+  padding: 20px 20px;
+  justify-content: center;
+  /* max-width: 400px; */
   width: 100%;
   user-select: none;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .loto-room__controlls .loto-gamecontrolls__buy {
@@ -413,6 +475,20 @@
   letter-spacing: 2px;
   margin-right: 15px;
   user-select: none;
+}
+
+@media (max-width: 767px) {
+  .loto-room__controlls .loto-gamecontrolls__buy {
+    padding: 10px 18px;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 439px) {
+  .loto-room__controlls .loto-gamecontrolls__buy {
+    padding: 7px 16px;
+    font-size: 16px;
+  }
 }
 
 .loto-room__controlls .loto-gamecontrolls__counter {
@@ -571,6 +647,16 @@
   justify-content: center;
   border-radius: 50%;
   background-color: rgba(246, 186, 158, 0.3);
+}
+
+.loto-gamemain__ticket.bought-ticket .ticket-cell.active.default::after {
+  background-color: rgba(246, 186, 158, 0.3);
+}
+.loto-gamemain__ticket.bought-ticket .ticket-cell.active.red::after {
+  background-color: #ff5f5f9a;
+}
+.loto-gamemain__ticket.bought-ticket .ticket-cell.active.purple::after {
+  background-color: #c870ff90;
 }
 
 .loto-gamemain__ticket.bought-ticket .ticket-cell.active::after {

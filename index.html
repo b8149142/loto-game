@@ -7,6 +7,7 @@
     <title>Лото</title>
 
     <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/conditions-privacy.css" />
     <link rel="stylesheet" href="style/header.css" />
     <link rel="stylesheet" href="style/main.css" />
     <link rel="stylesheet" href="style/games.css" />
@@ -17,14 +18,31 @@
     <link rel="stylesheet" href="style/admin.css" />
     <link rel="stylesheet" href="style/settings.css" />
     <link rel="stylesheet" href="style/profile.css" />
+    <link rel="stylesheet" href="style/change-tokens.css" />
+    <link rel="stylesheet" href="style/admin-withdraw-page.css" />
+    <link rel="stylesheet" href="style/domino/menu.css" />
+    <link rel="stylesheet" href="style/domino/domino-table-page.css" />
   </head>
-  <div class="page-preloader"></div>
+  <div class="page-preloader">
+    <div class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
   <header>
     <div class="header__container">
       <a href="" class="header__logo"><img src="img/logo.png" alt="" /> </a>
       <div class="header__user">
         <p class="header__balance-block">
           <span class="header__balance">0.00</span> ₼
+          <img
+            src="img/plus-orange.png"
+            alt="balance"
+            class="curpointer header__plus"
+            height="20"
+          />
         </p>
       </div>
     </div>
@@ -36,90 +54,21 @@
           <div class="registration__body">
             <img src="./img/logo.png" alt="logo" class="registration__logo" />
             <div class="select-language">
-              <img src="./img/AZ.png" alt="AZ" />
+              <div class="select-language__img">
+                <img src="./img/ru-lang.png" alt="AZ" />
+              </div>
               <div class="select-language__text">
-                <p>Выберите язык</p>
-                <p><span>Azərbaycan Dili</span></p>
+                <p class="select-language__text-top">Выберите язык</p>
+                <p><span>Русский</span></p>
               </div>
               <span class="select-language__chevron"></span>
             </div>
             <form action="" class="registration-form">
               <div class="registration-form__header form-header">
-                <!-- <div class="form-header__buttons">
-                  <div class="form-header__button registration-button active">
-                    Регистрация
-                  </div>
-                  <div class="form-header__button login-button">Вход</div>
-                </div> -->
                 <h2 class="form-header__heading">Авторизация</h2>
-                <!-- <div class="form-header__indicator indicator-form">
-                  <div class="indicator-form__line"></div>
-                </div> -->
               </div>
               <span class="auth-form-error"></span>
-              <div class="registration-form__body form-body">
-                <!-- <div class="form-body-registration">
-                  <input
-                    type="text"
-                    placeholder="Имя"
-                    class="form-body__input name-input"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="username"
-                    class="form-body__input username-input"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Ваш email"
-                    class="form-body__input email-input"
-                  />
-
-                  <input
-                    type="text"
-                    placeholder="Ваш пароль"
-                    class="form-body__input password-input"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Повтор пароля"
-                    class="form-body__input repeat-password-input"
-                  />
-                  <button class="form-body__button registration-button">
-                    ЗАРЕГИСТРИРОВАТЬСЯ
-                  </button>
-
-                  <div class="form-body__no-account">
-                    <a>Есть аккаунт?</a>
-                    <button class="form-body__registration open-login">
-                      Войти
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div class="form-body-login">
-                  <p>Имя пользователя</p>
-                  <input
-                    type="text"
-                    placeholder="Ваш username"
-                    class="form-body__input username-input"
-                  />
-                  <p>Пароль</p>
-                  <input
-                    type="text"
-                    placeholder="Ваш пароль"
-                    class="form-body__input password-input"
-                  />
-                  <button class="form-body__button login-button">Войти</button>
-                  <div class="form-body__no-account">
-                    <a>Нет аккаунта?</a>
-                    <button class="form-body__registration open-registration">
-                      Регистрация
-                    </button>
-                  </div>
-                </div> -->
-              </div>
+              <div class="registration-form__body form-body"></div>
             </form>
           </div>
         </div>
@@ -127,7 +76,7 @@
     </div>
 
     <main>
-      <div class="main__container">
+      <div class="main__container footer__padding">
         <section class="games">
           <div class="games__container" id="loto">
             <a class="game loto-room loto-room-1" room="1">
@@ -145,7 +94,7 @@
                   <div class="room-left__item room-left__item-2">
                     <div class="room-left__item-info-row lobby-room-bet">
                       <img src="img/bank-icon.png" alt="" />
-                      <p>ОБЩИЙ БАНК: <span>0</span> ₼</p>
+                      <p><span>0</span> ₼</p>
                     </div>
                     <div
                       class="room-left__item-info-row room-left__item-info-row-green lobby-room-online"
@@ -154,7 +103,7 @@
                       <p>ИГРОКОВ ОНЛАЙН: <span>0</span></p>
                     </div>
                   </div>
-                  <div class="room-left__item room-left__item-3">
+                  <div class="room-left__item room-left__item-3 prev-bank">
                     <div class="room-left__item-info-row">
                       <img src="img/bank-before-icon.png" alt="" />
                       <p>
@@ -170,15 +119,22 @@
                   </div>
                   <div class="loto-room__body-right__jackpot">
                     <img src="img/room-jackpot-img.png" alt="" />
-                    <p
-                      class="loto-room__body-right__jackpot-sum game__room-jackpot-sum"
-                    >
-                      0
+                    <p class="loto-room__body-right__jackpot-sum">
+                      <span class="game__room-jackpot-sum"> 0 </span>
+                      ₼
                     </p>
                   </div>
                   <div class="loto-room__body-right__price-block">
                     <p class="price-text">Цена билета:</p>
-                    <button class="price"><span>0.20</span> ₼</button>
+                    <button class="price">
+                      <div class="price-money"><span>0.20</span> ₼</div>
+                      <div class="price-tockens">
+                        x2
+                        <div class="price-tockens__decor">
+                          <img src="img/room-tokens-decor.png" alt="" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -198,7 +154,7 @@
                   <div class="room-left__item room-left__item-2">
                     <div class="room-left__item-info-row lobby-room-bet">
                       <img src="img/bank-icon.png" alt="" />
-                      <p>ОБЩИЙ БАНК: <span>0</span> ₼</p>
+                      <p><span>0</span> ₼</p>
                     </div>
                     <div
                       class="room-left__item-info-row room-left__item-info-row-green lobby-room-online"
@@ -207,7 +163,7 @@
                       <p>ИГРОКОВ ОНЛАЙН: <span>0</span></p>
                     </div>
                   </div>
-                  <div class="room-left__item room-left__item-3">
+                  <div class="room-left__item room-left__item-3 prev-bank">
                     <div class="room-left__item-info-row">
                       <img src="img/bank-before-icon.png" alt="" />
                       <p>
@@ -223,15 +179,22 @@
                   </div>
                   <div class="loto-room__body-right__jackpot">
                     <img src="img/room-jackpot-img.png" alt="" />
-                    <p
-                      class="loto-room__body-right__jackpot-sum game__room-jackpot-sum"
-                    >
-                      0
+                    <p class="loto-room__body-right__jackpot-sum">
+                      <span class="game__room-jackpot-sum"> 0 </span>
+                      ₼
                     </p>
                   </div>
                   <div class="loto-room__body-right__price-block">
                     <p class="price-text">Цена билета:</p>
-                    <button class="price"><span>0.20</span> ₼</button>
+                    <button class="price">
+                      <div class="price-money"><span>0.50</span> ₼</div>
+                      <div class="price-tockens">
+                        x5
+                        <div class="price-tockens__decor">
+                          <img src="img/room-tokens-decor.png" alt="" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -251,7 +214,7 @@
                   <div class="room-left__item room-left__item-2">
                     <div class="room-left__item-info-row lobby-room-bet">
                       <img src="img/bank-icon.png" alt="" />
-                      <p>ОБЩИЙ БАНК: <span>0</span> ₼</p>
+                      <p><span>0</span> ₼</p>
                     </div>
                     <div
                       class="room-left__item-info-row room-left__item-info-row-green lobby-room-online"
@@ -260,7 +223,7 @@
                       <p>ИГРОКОВ ОНЛАЙН: <span>0</span></p>
                     </div>
                   </div>
-                  <div class="room-left__item room-left__item-3">
+                  <div class="room-left__item room-left__item-3 prev-bank">
                     <div class="room-left__item-info-row">
                       <img src="img/bank-before-icon.png" alt="" />
                       <p>
@@ -276,15 +239,22 @@
                   </div>
                   <div class="loto-room__body-right__jackpot">
                     <img src="img/room-jackpot-img.png" alt="" />
-                    <p
-                      class="loto-room__body-right__jackpot-sum game__room-jackpot-sum"
-                    >
-                      0
+                    <p class="loto-room__body-right__jackpot-sum">
+                      <span class="game__room-jackpot-sum"> 0 </span>
+                      ₼
                     </p>
                   </div>
                   <div class="loto-room__body-right__price-block">
                     <p class="price-text">Цена билета:</p>
-                    <button class="price"><span>0.20</span> ₼</button>
+                    <button class="price">
+                      <div class="price-money"><span>1</span> ₼</div>
+                      <div class="price-tockens">
+                        x10
+                        <div class="price-tockens__decor">
+                          <img src="img/room-tokens-decor.png" alt="" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -304,7 +274,7 @@
                   <div class="room-left__item room-left__item-2">
                     <div class="room-left__item-info-row lobby-room-bet">
                       <img src="img/bank-icon.png" alt="" />
-                      <p>ОБЩИЙ БАНК: <span>0</span> ₼</p>
+                      <p><span>0</span> ₼</p>
                     </div>
                     <div
                       class="room-left__item-info-row room-left__item-info-row-green lobby-room-online"
@@ -313,7 +283,7 @@
                       <p>ИГРОКОВ ОНЛАЙН: <span>0</span></p>
                     </div>
                   </div>
-                  <div class="room-left__item room-left__item-3">
+                  <div class="room-left__item room-left__item-3 prev-bank">
                     <div class="room-left__item-info-row">
                       <img src="img/bank-before-icon.png" alt="" />
                       <p>
@@ -329,15 +299,22 @@
                   </div>
                   <div class="loto-room__body-right__jackpot">
                     <img src="img/room-jackpot-img.png" alt="" />
-                    <p
-                      class="loto-room__body-right__jackpot-sum game__room-jackpot-sum"
-                    >
-                      0
+                    <p class="loto-room__body-right__jackpot-sum">
+                      <span class="game__room-jackpot-sum"> 0 </span>
+                      ₼
                     </p>
                   </div>
                   <div class="loto-room__body-right__price-block">
                     <p class="price-text">Цена билета:</p>
-                    <button class="price"><span>0.20</span> ₼</button>
+                    <button class="price">
+                      <div class="price-money"><span>5</span> ₼</div>
+                      <div class="price-tockens">
+                        x50
+                        <div class="price-tockens__decor">
+                          <img src="img/room-tokens-decor.png" alt="" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -357,7 +334,7 @@
                   <div class="room-left__item room-left__item-2">
                     <div class="room-left__item-info-row lobby-room-bet">
                       <img src="img/bank-icon.png" alt="" />
-                      <p>ОБЩИЙ БАНК: <span>0</span> ₼</p>
+                      <p><span>0</span> ₼</p>
                     </div>
                     <div
                       class="room-left__item-info-row room-left__item-info-row-green lobby-room-online"
@@ -366,7 +343,7 @@
                       <p>ИГРОКОВ ОНЛАЙН: <span>0</span></p>
                     </div>
                   </div>
-                  <div class="room-left__item room-left__item-3">
+                  <div class="room-left__item room-left__item-3 prev-bank">
                     <div class="room-left__item-info-row">
                       <img src="img/bank-before-icon.png" alt="" />
                       <p>
@@ -382,496 +359,48 @@
                   </div>
                   <div class="loto-room__body-right__jackpot">
                     <img src="img/room-jackpot-img.png" alt="" />
-                    <p
-                      class="loto-room__body-right__jackpot-sum game__room-jackpot-sum"
-                    >
-                      0
+                    <p class="loto-room__body-right__jackpot-sum">
+                      <span class="game__room-jackpot-sum"> 0 </span>
+                      ₼
                     </p>
                   </div>
                   <div class="loto-room__body-right__price-block">
                     <p class="price-text">Цена билета:</p>
-                    <button class="price"><span>0.20</span> ₼</button>
+                    <button class="price">
+                      <div class="price-money"><span>10</span> ₼</div>
+                      <div class="price-tockens">
+                        x100
+                        <div class="price-tockens__decor">
+                          <img src="img/room-tokens-decor.png" alt="" />
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
             </a>
           </div>
         </section>
-
-        <!-- <div class="popup end-game-popup">
-          <div class="popup__body end-game-popup__body">
-            <div class="popup__content end-game-popup__content">
-              <button class="popup__close-timer close-popup-timer">00</button>
-              <div class="popup__title end-game-popup__title">
-                К сожалению вы не смогли выиграть попробуйте еще раз.
-              </div>
-
-              <div class="popup__text end-game-popup__text">
-                Список победителей:
-              </div>
-              <div class="end-game-popup__winners-wrapper">
-                <div class="end-game-popup__winners end-game-winners"></div>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
-
-      <!-- <div class="main__container">
-        <section class="user-game-history">
-          <div class="user-game-history-header">
-            <div class="user-game-history-header__back"><</div>
-            <h3 class="user-game-history-header__title">Статистика игрока</h3>
-          </div>
-          <div class="user-game-history__main">
-            <div class="user-game__item game-item">
-              <div class="game-item__tickets-block">
-              
-              </div>
-              <div class="game-item__row game-item__isWon">
-                Результат: <span>Проиграл</span>
-              </div>
-              <div class="game-item__row game-item__winSum">
-                Сума выигрыша: <span>0</span>M
-              </div>
-              <div class="game-item__row game-item__last-index">
-                Ход: <span class="game-item__last-index-num">56</span>
-              </div>
-              <div class="game-item__row game-item__jackpotWon">
-                Джекпот выигран:
-                <span class="game-item__jackpotWon-status">нет</span>
-              </div>
-              <div class="game-item__row game-item__price">
-                Цена билета: <span class="game-item__price-sum">12</span>M
-              </div>
-              <div class="game-item__row game-item__bet">
-                Ставка: <span class="game-item__bet-sum">43</span>M
-              </div>
-              <div class="game-item__row game-item__bank">
-                Общий банк: <span class="game-item__bank-sum">431</span>M
-              </div>
-            </div>
-          </div>
-        </section>
-      </div> -->
-
-      <!-- <div class="main__container">
-        <section class="leader-menu-page">
-          <div class="leader-page-main">
-            <div class="leader-page-menu">
-              <div class="leader-page-menu__item">
-                <img src="img/loto-img.png" alt="" /><span>Лидеры лото</span>
-              </div>
-              <div class="leader-page-menu__item">
-                <img src="img/loto-img.png" alt="" /><span>Лидеры домино</span>
-              </div>
-              <div class="leader-page-menu__item">
-                <img src="img/loto-img.png" alt="" /><span>Лидеры нардов</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div> -->
-
-      <!-- <div class="main__container">
-        <section class="leader-page">
-          <div class="leader-page__header">
-            <div class="leader-page__back"><</div>
-            <div class="leader-page__title">Лидеры лото</div>
-          </div>
-          <div class="leader-page__main">
-            <div class="leader-page__table leader-table">
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-              <div class="leader-table__item leader-item">
-                <div class="leader-item__number">1</div>
-                <div class="leader-item__username">2voby</div>
-                <div class="leader-item__wonsum">
-                  <div class="leader-item__wonsum-body">
-                    <span>1000</span> M
-                  </div>
-                </div>
-                <div class="leader-item__tokens">t: <span>12345</span></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div> -->
-
-      <!-- <div class="main__container">
-        <section class="settings-page">
-          <div class="settings-page-header">
-            <h3 class="settings-page-header__title">Настройки</h3>
-          </div>
-          <div class="settings-page-main">
-            <div class="settings-page-main__block settings-block">
-              <div class="settings-block__item settings-item">
-                <h4 class="settings-item__title">Цвет выпавших боченков</h4>
-                <div class="settings-item__colors">
-                  <div
-                    color="red"
-                    color-code="#FF5F5F"
-                    class="red active"
-                  ></div>
-                  <div color="purple" color-code="#C870FF" class="purple"></div>
-                  <div color="yellow" color-code="#FCFF51" class="yellow"></div>
-                </div>
-              </div>
-
-              <div class="settings-block__item settings-item">
-                <h4 class="settings-item__title">Звуки</h4>
-                <div class="settings-item__sounds">
-                  <div class="settings-item__sounds-item">
-                    <span>Игра</span>
-                    <input type="checkbox" checked="true" />
-                  </div>
-                  <div class="settings-item__sounds-item">
-                    <span>Меню</span>
-                    <input type="checkbox" checked="true" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div> -->
-
-      <!-- <div class="main__container">
-        <section class="profile-page">
-          <div class="profile-page-header">
-            <h3 class="profile-page-header__title">Профиль игрока</h3>
-          </div>
-          <div class="profile-page-main">
-            <div class="profile-page-main__block profile-block">
-              <div class="profile-block__section">
-                <div class="profile-block__item button">
-                  <h4>Баланс: <span>10</span></h4>
-                  <div class="topup-balance">+</div>
-                </div>
-              </div>
-              <div class="profile-block__section">
-                <h3 class="profile-block__item title">
-                  Информация об аккаунте
-                </h3>
-                <p class="profile-block__item text">
-                  Имя: <span class="profile-name"></span>
-                </p>
-                <p class="profile-block__item text">
-                  Почта: <span class="profile-email"></span>
-                </p>
-                <p class="profile-block__item text">
-                  Username: <span class="profile-username"></span>
-                </p>
-                <div class="profile-block__item button">
-                  <h4>Изменить пароль</h4>
-                </div>
-              </div>
-              <div class="profile-block__section">
-                <h3 class="profile-block__item title">Другое</h3>
-                <div class="profile-block__item button">
-                  <h4>Статистика игр</h4>
-                </div>
-                <div class="profile-block__item button">
-                  <h4>Транзакции</h4>
-                </div>
-                <div class="profile-block__item button exit">
-                  <h4>Выйти</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div> -->
     </main>
-    <!-- <div class="popup end-game-popup">
-      <div class="popup__body end-game-popup__body">
-        <div class="popup__content end-game-popup__content">
-          <button class="popup__close-timer close-popup-timer">00</button>
-          <div class="popup__title end-game-popup__title">
-            Поздравляем, вы победили!
-          </div>
-          <div class="popup__text end-game-popup__text">
-            Список победителей:
-          </div>
-          <div class="end-game-popup__winners-wrapper">
-            <div class="end-game-popup__winners end-game-winners">
-              <div class="end-game-winners__item">
-                <div class="end-game-winners__item-header">
-                  <div class="end-game-winners__item-name">2voby</div>
-                  <div class="end-game-winners__item-won">
-                    <span>34.2</span>
-                  </div>
-                </div>
-                <div class="end-game-winners__item-ticket">
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                </div>
-              </div>
-              <div class="end-game-winners__item">
-                <div class="end-game-winners__item-name">2voby</div>
-                <div class="end-game-winners__item-ticket">
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                </div>
-              </div>
-              <div class="end-game-winners__item">
-                <div class="end-game-winners__item-name">2voby</div>
-                <div class="end-game-winners__item-ticket">
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                  <div class="end-game-winners__item-ticket-cell">
-                    <div class="end-game-winners__item-ticket-number">12</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    <!-- 
-    <div class="popup jackpot-popup">
-      <div class="popup__body jackpot-popup__body">
-        <div class="popup__content jackpot-popup__content">
-          <div class="jackpot-popup__jackpot animation">657</div>
-          <div class="popup__title jackpot-popup__title visible">
-            Джекпот был выигран игроком 2voby!
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <footer id="footer">
       <div class="footer__container">
         <div class="foter__content">
           <div class="footer__menu menu-footer">
-            <div class="menu-footer__item open-profile">
+            <div class="menu-footer__item open-profile active">
               <img src="img/profile-button.png" alt="" />
             </div>
             <div class="menu-footer__item">
               <img src="img/chat.png" alt="" />
             </div>
             <div
-              class="menu-footer__item menu-footer__main-item open-games-menu"
+              class="menu-footer__item menu-footer__main-item open-games-menu active"
             >
+              <div class="open-games-menu">
+                <div class="open-loto">Лото</div>
+                <div class="open-nards">Нарды</div>
+              </div>
               <img src="img/games.png" alt="" />
             </div>
             <div class="menu-footer__item open-liders-menu">

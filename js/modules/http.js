@@ -1,7 +1,9 @@
-export const API_URL = "https://lotogame.onrender.com/api";
+// export const API_URL = "https://app.24loto.com/api";
+export const API_URL = "http://localhost:5001/api";
+// export const API_URL = "https://loto-server-new.onrender.com/api";
 
 const $api = axios.create({
-  withCredentials: true,
+  withCredentials: false,
   baseURL: API_URL,
 });
 
@@ -56,7 +58,7 @@ export async function login(loginData) {
 export async function updateAuth() {
   try {
     const response = await axios.get(`${API_URL}/refresh`, {
-      withCredentials: true,
+      withCredentials: false,
     });
 
     localStorage.setItem("token", response.data.accessToken);
@@ -103,7 +105,7 @@ export async function getUser() {
     const response = await $api.get(`/get-user`);
     return await response;
   } catch (error) {
-    console.log(e.response);
+    console.log(error.response);
     return await error.response;
   }
 }
@@ -310,6 +312,144 @@ export async function getAdminBotWins() {
   // можна передавать игру чтоб получать игру для статистики
   try {
     const response = await $api.get(`/bot-wins`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function exchangeTokens(tokens) {
+  try {
+    const response = await $api.put(`/exchange-tokens`, { tokens });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getAllUsersStats() {
+  try {
+    const response = await $api.get(`/allUsersStats`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getUserStats() {
+  try {
+    const response = await $api.get(`/userStats`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getCurrencyRate() {
+  try {
+    const response = await $api.get(`/getCurrencyRate`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function deposit(sum) {
+  try {
+    const response = await $api.post(`/deposit`, { sum });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getPayouts() {
+  try {
+    const response = await $api.get(`/getPayouts`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function checkPayouts(ids) {
+  try {
+    const response = await $api.put(`/checkPayouts`, { ids });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function createPayout(
+  withdrawAmount,
+  cardNumber,
+  cardHolder,
+  validity
+) {
+  try {
+    const response = await $api.post(`/createPayout`, {
+      withdrawAmount,
+      cardNumber,
+      cardHolder,
+      validity,
+    });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function updateUserData(name, email) {
+  try {
+    const response = await $api.put(`/updateUserData`, {
+      name,
+      email,
+    });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getPlayedGames() {
+  try {
+    const response = await $api.get(`/played-games`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getDominoStatus() {
+  try {
+    const response = await $api.get("/game/domino-status");
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function isDominoStarted(roomId, tableId, playerMode, gameMode) {
+  try {
+    const response = await $api.post("/game/domino-isstarted", {
+      roomId,
+      tableId,
+      playerMode,
+      gameMode,
+    });
     return await response;
   } catch (e) {
     console.log(e.response);
