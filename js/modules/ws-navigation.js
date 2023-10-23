@@ -32,7 +32,7 @@ export const connectWebsocketFunctions = () => {
   // const ws = new WebSocket(`wss://app.24loto.com/game`);
   // const ws = new WebSocket(`wss://loto-server-new.onrender.com/game`);
   //const ws = new WebSocket(`ws://localhost:5001/game`);
-    const ws = new WebSocket(`ws://lotogame.onrender.com/game`);
+    const ws = new WebSocket(`wss://lotogame.onrender.com/game`);
   window.ws = ws;
   let clientId = impLotoNav.createClientId();
 
