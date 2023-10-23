@@ -1,5 +1,5 @@
 // export const API_URL = "https://app.24loto.com/api";
-export const API_URL = "http://localhost:5001/api";
+export const API_URL = "https://lotogame.onrender.com/api";
 // export const API_URL = "https://loto-server-new.onrender.com/api";
 
 const $api = axios.create({
