@@ -4,6 +4,7 @@ import * as impNav from "../navigation.js";
 import * as impPopup from "../pages/popup.js";
 import * as impAudio from "../audio.js";
 import * as authinterface from "../authinterface.js";
+import * as time from "../time.js";
 
 let preloader = document.querySelector(".page-preloader");
 
@@ -165,11 +166,10 @@ export async function startLotoTimer(
   // стартуем таймер
   let lobbyPage = document.querySelector(".loto-room-page");
   if (lobbyPage) {
-    console.log("start loto timer");
     let timerBlock = document.querySelector(".loto-room-page__timer span");
     const startedAt = new Date(strtedAt).getTime();
     const targetTime = startedAt + 60 * 1000; // 5 minutes in milliseconds
-    let nowClientTime = await NowClientTime();
+    let nowClientTime = await time.NowClientTime();
 
     let distance = targetTime - nowClientTime;
     if (lotoTimer != null) {
@@ -178,11 +178,9 @@ export async function startLotoTimer(
     }
     lotoTimer = setInterval(async () => {
       distance -= 1000;
-      console.log(distance);
       if (distance <= 0) {
         clearInterval(lotoTimer);
         lotoTimer = null;
-        console.log("finish loto timer");
         if (timerBlock) {
           // добавить окно (игра начинается)
           timerBlock.innerHTML = "00:00";
@@ -202,99 +200,6 @@ export async function startLotoTimer(
       }
     }, 1000);
   }
-}
-NowClientTime();
-export async function NowClientTime() {
-  const date = await axios.get(
-    "https://api.api-ninjas.com/v1/worldtime?city=London",
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Api-Key": "rpWZR9MlW23ZoAcHMLIWhw==KcixnFSk5PKTcK58",
-      },
-    }
-  );
-
-  // console.log(date.data.datetime);
-  // const timeDate = new Date(date.data.datetime);
-  // console.log(timeDate);
-  // console.log(new Date());
-
-  // let time = new Date(date.data.datetime).getTime();
-  // console.log("time", time);
-  let timeHands = createDateMillis(
-    date.data.year,
-    date.data.month,
-    date.data.day,
-    date.data.hour,
-    date.data.minute,
-    date.data.second
-  );
-  // console.log("timeHands", timeHands);
-
-  // console.log("now time", new Date().getTime());
-  // console.log("api time", time);
-
-  return timeHands - 180 * 60 * 1000;
-  // return timeHands;
-}
-
-// "year": "2023",
-// "month": "09",
-// "day": "09",
-// "hour": "21",
-// "minute": "52",
-// "second": "24",
-// "day_of_week": "Saturday"
-
-export function createDateMillis(year, month, day, hours, minutes, seconds) {
-  // Проверяем, является ли год высокосным
-  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-
-  // Количество дней в месяцах (включая февраль для высокосных и невысокосных лет)
-  const daysInMonth = [
-    31,
-    isLeapYear ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ];
-
-  // Проверяем корректность значений месяца и дня
-  if (month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1]) {
-    throw new Error("Некорректные значения месяца или дня.");
-  }
-
-  // Рассчитываем миллисекунды с начала эпохи (1 января 1970 года)
-  let milliseconds = 0;
-
-  // Рассчитываем миллисекунды для годов
-  for (let y = 1970; y < year; y++) {
-    const isLeapYearY = (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
-    milliseconds += isLeapYearY ? 31622400000 : 31536000000; // 31,622,400,000 мс в високосном году, 31,536,000,000 мс в невисокосном
-  }
-
-  // Рассчитываем миллисекунды для месяцев
-  for (let m = 1; m < month; m++) {
-    milliseconds += daysInMonth[m - 1] * 86400000; // 86,400,000 мс в дне
-  }
-
-  // Рассчитываем миллисекунды для дней
-  milliseconds += (day - 1) * 86400000;
-
-  // Рассчитываем миллисекунды для времени (часы, минуты, секунды)
-  milliseconds += hours * 3600000; // 3,600,000 мс в часе
-  milliseconds += minutes * 60000; // 60,000 мс в минуте
-  milliseconds += seconds * 1000; // 1,000 мс в секунде
-
-  return milliseconds;
 }
 
 export function updateAllRoomsOnline(onlineArr) {
@@ -416,10 +321,16 @@ export function buyTickets(ws, roomId, bet) {
       }
       let ticketsArray = [];
 
-      const balance = +document.querySelector(".header__balance").innerHTML;
+      // const balance = +document.querySelector(".header__balance").innerHTML;
+
+      let user = localStorage.getItem("user");
+      if (user) {
+        user = JSON.parse(user);
+      }
+
       const ticketsPrice =
         (+ticketsCount.innerHTML - boughtTickets.length) * bet;
-      if (balance < ticketsPrice) {
+      if (user.balance < ticketsPrice) {
         impPopup.openErorPopup(`${siteLanguage.popups.notEnoughMoney}`);
         return;
       }
@@ -564,7 +475,7 @@ export async function startMenuTimerLobby(
           let countDownDate =
             new Date(timers[`room${roomId}`]).getTime() + 60000;
 
-          let nowClientTime = await NowClientTime();
+          let nowClientTime = await time.NowClientTime();
 
           let distance = countDownDate - nowClientTime;
 
@@ -651,7 +562,7 @@ export async function startMenuTimerGame(
 
           let countDownDate = new Date(timers[`room${roomId}`]).getTime();
 
-          let nowClientTime = await NowClientTime();
+          let nowClientTime = await time.NowClientTime();
 
           let distance = nowClientTime - countDownDate;
 

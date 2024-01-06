@@ -96,7 +96,6 @@ export async function openLeadersPage(gameType) {
 
   // создание победителей в таблицу
   function createLeaderesTable(table, data, tableElementWrapper) {
-    console.log("LEADERS DATA:", data);
     // sort data by tokens amount from max to min
 
     data = data.sort((a, b) => {

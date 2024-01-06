@@ -2,9 +2,12 @@ import * as impAuth from "./authorization.js";
 import * as impHttp from "../http.js";
 import * as impPopup from "./popup.js";
 import * as impAdminNav from "./admin-navigation.js";
+import * as impDominoNav from "../domino/domino-navigation.js";
 import * as impAudio from "../audio.js";
 import * as impLeaders from "./leaders.js";
 import * as impAuthInterface from "../authinterface.js";
+import * as impRoomsControl from "./rooms-control.js";
+import { API_URL_PART, IS_HOSTED_STATIC } from "../config.js";
 let preloader = document.querySelector(".page-preloader");
 
 export async function openProfilePage() {
@@ -16,7 +19,8 @@ export async function openProfilePage() {
     main.innerHTML = `
       <section class="profile-page">
           <div class="profile-page__header">
-            <img src="img/profile.png" alt="user" />
+          <div class="profile-avatar"><img src="img/profile.png" alt="user" id="userAvatar" /></div>
+              
             <h2>user</h2>
           </div>
   
@@ -66,29 +70,7 @@ export async function openProfilePage() {
               <p>${siteLanguage.profilePage.mainButtons.bonusesBtnText}</p>
               <img src="img/profile icons/chevron-right.png" alt="БОНУСЫ" />
             </a>
-            <a class="profile__button">
-              <img src="img/profile icons/sound.png" alt="ЗВУК" />
-              <p>${siteLanguage.profilePage.mainButtons.soundsBtnText}</p>
-              <div class="profile__button-switcher curpointer">
-                <button class="profile__button-switcher-on active">ON</button>
-                <button class="profile__button-switcher-off">OFF</button>
-              </div>
-            </a> 
-            <a class="profile__button  user-cask-color">
-              <div class="text-block">${
-                siteLanguage.profilePage.mainButtons.casksBtnText
-              }</div>
-              <div class="casks-block">
-              <div color="default" color-code="#F6BA9E" class="setting-cask default"></div>
-
-                <div
-                  color="red"
-                  color-code="#FF5F5F"
-                  class="setting-cask red "
-                ></div>
-                <div color="purple" color-code="#C870FF" class="setting-cask purple"></div>
-              </div>
-            </a>
+          
             
             <a class="profile__button  user-cask-color">
               <div class="text-block">${
@@ -120,6 +102,15 @@ export async function openProfilePage() {
                     alt="АДМИН-ПАНЕЛЬ"
                   />
                 </a>
+
+                <a class="profile__button room-management">
+                  <img src="img/profile icons/balance.png" />
+                  <p>УПРАВЛЕНИЕ КОМНАТАМИ</p>
+                  <img
+                    src="img/profile icons/chevron-right.png"
+                    alt="УПРАВЛЕНИЕ КОМНАТАМИ"
+                  />
+                </a>   
                 `
                 : ``
             }
@@ -132,6 +123,15 @@ export async function openProfilePage() {
           </div>
         </section>
     `;
+
+    let userAvatar = document.querySelector("#userAvatar");
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user.avatar) {
+      userAvatar.src = `http${API_URL_PART}/${
+        IS_HOSTED_STATIC ? "static/avatars/" : ""
+      }${user.avatar}`;
+    }
 
     // убираем хедер
 
@@ -160,34 +160,6 @@ export async function openProfilePage() {
       preloader.classList.add("d-none");
     }
 
-    // кнопка изменения цвета
-    const localCaskColor = localStorage.getItem("cask-color");
-    const colors = document.querySelectorAll(".casks-block .setting-cask");
-    colors.forEach((color) => {
-      color.classList.remove("active");
-
-      if (color.getAttribute("color") == localCaskColor) {
-        color.classList.add("active");
-      }
-    });
-
-    colors.forEach((color) => {
-      color.addEventListener("click", () => {
-        colors.forEach((color) => color.classList.remove("active"));
-        color.classList.add("active");
-        localStorage.setItem("cask-color", color.getAttribute("color"));
-      });
-    });
-
-    // ставим active для кнопки с цветом из localstorage
-    const caskColor = localStorage.getItem("cask-color");
-    if (caskColor) {
-      const cask = document.querySelector(`.setting-cask[color=${caskColor}]`);
-      if (cask) {
-        cask.classList.add("active");
-      }
-    }
-
     // вставляем ник и баланс
     let profilePage = document.querySelector(".profile-page");
     let usernameBlock = profilePage.querySelector(".profile-page__header h2");
@@ -195,43 +167,6 @@ export async function openProfilePage() {
 
     let usernameBalance = profilePage.querySelector(".profile__balance span");
     usernameBalance.innerHTML = localUser.balance.toFixed(2);
-
-    const soundSwitcher = document.querySelector(".profile__button-switcher");
-    const soundOn = document.querySelector(".profile__button-switcher-on");
-    const soundOff = document.querySelector(".profile__button-switcher-off");
-
-    let menuSoundsAllowed = localStorage.getItem("sounds-menu");
-    let gameSoundsAllowed = localStorage.getItem("sounds-game");
-
-    if (menuSoundsAllowed == "true" || gameSoundsAllowed == "true") {
-      soundOn.classList.add("active");
-      soundOff.classList.remove("active");
-    } else {
-      soundOn.classList.remove("active");
-      soundOff.classList.add("active");
-    }
-
-    const toggleSound = () => {
-      if (soundOn.classList.contains("active")) {
-        soundOn.classList.remove("active");
-        soundOff.classList.add("active");
-        localStorage.setItem("sounds-game", false);
-        localStorage.setItem("sounds-menu", false);
-        impAudio.setGameSoundsAllowed(false);
-        impAudio.setMenuSoundsAllowed(false);
-      } else {
-        soundOn.classList.add("active");
-        soundOff.classList.remove("active");
-        localStorage.setItem("sounds-game", true);
-        localStorage.setItem("sounds-menu", true);
-        impAudio.setGameSoundsAllowed(true);
-        impAudio.setMenuSoundsAllowed(true);
-      }
-    };
-
-    soundSwitcher.addEventListener("click", () => {
-      toggleSound();
-    });
 
     const profileDetailsButton = document.querySelector(".profile-details");
     profileDetailsButton.addEventListener("click", async function () {
@@ -277,12 +212,7 @@ export async function openProfilePage() {
     const bonusesButton = document.querySelector(".user-bonuses");
     bonusesButton.addEventListener("click", async () => {
       await openUserBonuses();
-      // убираем навигацию сайта
-      let footer = document.querySelector("#footer");
-      if (footer && !footer.classList.contains("d-none")) {
-        footer.classList.add("d-none");
-        main.classList.remove("footer__padding");
-      }
+
       preloader.classList.add("d-none");
     });
 
@@ -302,6 +232,14 @@ export async function openProfilePage() {
     if (paymentsButton) {
       paymentsButton.addEventListener("click", async () => {
         openPayments();
+      });
+    }
+
+    // room management
+    const roomManagementButton = document.querySelector(".room-management");
+    if (roomManagementButton) {
+      roomManagementButton.addEventListener("click", async () => {
+        await impRoomsControl.openRoomManagement();
       });
     }
 
@@ -426,7 +364,7 @@ async function openDeposit() {
         <div class="deposit__form-money">
           <h2>${siteLanguage.depositPage.depositSumText}: </h2>
           <div class="deposit__form-content">
-            <input class="deposit__form-sum" placeholder="0" type="number" />
+            <input class="deposit__form-sum" placeholder="0" type="number"  />
             <span>₼</span>
             <div class="deposit__form-ready-sums">
               <button class="deposit__form-ready-sum">
@@ -467,6 +405,11 @@ async function openDeposit() {
   const dollarRate = currencyRate.data.rate || 1.705;
 
   const sumInput = document.querySelector(".deposit__form-sum");
+
+  sumInput.addEventListener("input", () => {
+    sumInput.value = sumInput.value.replace(/[^0-9]/g, "");
+    sumInput.value = sumInput.value.slice(0, 4);
+  });
 
   const readySumButtons = document.querySelectorAll(".deposit__form-ready-sum");
 
@@ -554,9 +497,9 @@ async function openWithdraw() {
       </div>
       <div class="withdraw-form__item">
         <label for="withdraw-form-sum">${siteLanguage.withdrawPage.cardSumText}</label>
-        <input id="withdraw-form-sum" type="tel" autocomplete = 'off'>
+        <input id="withdraw-form-sum"  maxlength="4" pattern="[0-9]{4}" max="1000" type="tel" autocomplete = 'off'>
       </div>
-      <p class="withdraw-form-p">${siteLanguage.withdrawPage.alertText}: 15₼</p>
+      <p class="withdraw-form-p">${siteLanguage.withdrawPage.alertText}: 20₼</p>
       <button class="withdraw-form__item-button">${siteLanguage.withdrawPage.withdrawButtonText}</button>
 
       <button class="go-back">
@@ -568,6 +511,16 @@ async function openWithdraw() {
   <div class="withdraw-page__footer"></div>
 </section>
   `;
+
+  const withdrawFormSum = document.querySelector("#withdraw-form-sum");
+  withdrawFormSum.addEventListener("input", () => {
+    // make 4 digits max and max value 1000
+    withdrawFormSum.value = withdrawFormSum.value.replace(/[^0-9]/g, "");
+    withdrawFormSum.value = withdrawFormSum.value.slice(0, 4);
+    if (withdrawFormSum.value > 1000) {
+      withdrawFormSum.value = 1000;
+    }
+  });
 
   const goBackButton = document.querySelector(".withdraw-page .go-back");
   goBackButton.addEventListener("click", function (e) {
@@ -652,8 +605,8 @@ async function openWithdraw() {
     const withdrawInput = document.querySelector("#withdraw-form-sum");
     let withdrawAmount = withdrawInput.value;
 
-    if (withdrawAmount < 15) {
-      impPopup.openErorPopup(`${siteLanguage.withdrawPage.alertText} 15₼`);
+    if (withdrawAmount < 20) {
+      impPopup.openErorPopup(`${siteLanguage.withdrawPage.alertText} 20₼`);
       return;
     }
 
@@ -797,10 +750,6 @@ function isValidCreditCard(cardNumber) {
 
 async function openUserDetails() {
   let siteLanguage = window.siteLanguage;
-  // let userInfo = await getProfileInfo();
-  // if (userInfo == false) {
-  //   return;
-  // }
 
   let localUser = localStorage.getItem("user");
   if (localUser) {
@@ -810,73 +759,151 @@ async function openUserDetails() {
   const main = document.querySelector(".main__container");
   main.innerHTML = `
   <section class="profile-page">
-    <div class="profile-page__header">
-      <img src="img/profile.png" alt="user" />
-      <!--<p class="profile-page__header-subtitle">Сменить аватар</p>-->
+  <div class="profile-page__header">
+    <div class="profile-avatar">
+      <button class="profile-avatar__close">X</button>
+      <img id = "userAvatarPreview" src="img/profile.png" alt="user" />
     </div>
-    <div class="profile__buttons">
-      <div class="profile-info__form">
-        <p class = 'username-label'>${siteLanguage.profilePage.profileDetailsPage.usernameText}</p>
-        <input
-          type="text"
-          placeholder="${localUser.username}"
-          class="form-body__input username-input"
-          disabled
-        />
-        <p class = 'name-label'>${siteLanguage.profilePage.profileDetailsPage.nameText}</p>
-        <input
-          type="text"
-          placeholder="${localUser.name}"
-          class="form-body__input password-input"
-        />
-        <p class = 'email-label'>${siteLanguage.profilePage.profileDetailsPage.emailText}</p>
-        <input
-          type="text"
-          placeholder="${localUser.email}"
-          class="form-body__input email-input"
-        />
-        </div>
-        <button class="profile__save">
-          ${siteLanguage.profilePage.profileDetailsPage.saveButtonText}
-        </button>
-        <div class="profile__buttons m20">
-          <a class="profile__button curpointer change-language">
-            <img src="img/profile icons/lang.png" />
-            <p>${siteLanguage.profilePage.profileDetailsPage.changeLanguageBtnText}</p>
-            <img
-              src="img/profile icons/chevron-right.png"
-              alt="СМЕНИТЬ ЯЗЫК"
-            />
-          </a>
-          <a class="profile__button curpointer transactions">
-            <img src="img/profile icons/dep.png" />
-            <p>${siteLanguage.profilePage.profileDetailsPage.transactionsBtnText}</p>
-            <img
-              src="img/profile icons/chevron-right.png"
-              alt="ТРАНЗАКЦИИ"
-            />
-          </a>
-          
-        </div>
-        <div class="profile-page__footer">
-          <button class="go-back">
-            <p>${siteLanguage.profilePage.profileDetailsPage.returnBtnText}</p>
-            <img src="img/logout.png" alt="logout" />
-          </button>
-        </div>
-      </div>
+    <input
+      type="file"
+      id="avatarFileInput"
+      name="avatarFileInput"
+      accept=".png, .jpg, .svg"
+    />
+  <p class="profile-page__header-subtitle">Сменить аватар</p>
+  </div>
+  <div class="profile__buttons">
+    <div class="profile-info__form">
+      <p class="username-label">
+        ${siteLanguage.profilePage.profileDetailsPage.usernameText}
+      </p>
+      <input
+        type="text"
+        placeholder="${localUser.username}"
+        class="form-body__input username-input"
+        disabled
+      />
+      <p class="name-label">
+        ${siteLanguage.profilePage.profileDetailsPage.nameText}
+      </p>
+      <input
+        type="text"
+        placeholder="${localUser.name}"
+        class="form-body__input password-input"
+      />
+      <p class="email-label">
+        ${siteLanguage.profilePage.profileDetailsPage.emailText}
+      </p>
+      <input
+        type="text"
+        placeholder="${localUser.email}"
+        class="form-body__input email-input"
+      />
     </div>
-  </section>
-  `;
+    <button class="profile__save">
+      ${siteLanguage.profilePage.profileDetailsPage.saveButtonText}
+    </button>
+    <div class="profile__buttons m20">
+      <a class="profile__button curpointer change-language">
+        <img src="img/profile icons/lang.png" />
+        <p>
+          ${siteLanguage.profilePage.profileDetailsPage.changeLanguageBtnText}
+        </p>
+        <img src="img/profile icons/chevron-right.png" alt="СМЕНИТЬ ЯЗЫК" />
+      </a>
+      <a class="profile__button curpointer transactions">
+        <img src="img/profile icons/dep.png" />
+        <p>
+          ${siteLanguage.profilePage.profileDetailsPage.transactionsBtnText}
+        </p>
+        <img src="img/profile icons/chevron-right.png" alt="ТРАНЗАКЦИИ" />
+      </a>
+      <a class="profile__button user-cask-color">
+        <div class="text-block">
+          ${siteLanguage.profilePage.mainButtons.casksBtnText}
+        </div>
+        <div class="casks-block">
+          <div
+            color="default"
+            color-code="#F6BA9E"
+            class="setting-cask default"
+          ></div>
 
-  const nameInput = document.querySelector(
+          <div color="red" color-code="#FF5F5F" class="setting-cask red"></div>
+          <div
+            color="purple"
+            color-code="#C870FF"
+            class="setting-cask purple"
+          ></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="profile-page__footer">
+      <button class="go-back">
+        <p>${siteLanguage.profilePage.profileDetailsPage.returnBtnText}</p>
+        <img src="img/logout.png" alt="logout" />
+      </button>
+    </div>
+  </div>
+</section>
+
+  `;
+  let thisPage = document.querySelector(".profile-page");
+
+  const nameInput = thisPage.querySelector(
     ".profile-info__form input.password-input"
   );
-  const emailInput = document.querySelector(
+  const emailInput = thisPage.querySelector(
     ".profile-info__form input.email-input"
   );
+  const fileInput = thisPage.querySelector("#avatarFileInput");
+  let userAvatarPreview = thisPage.querySelector("#userAvatarPreview");
 
-  const saveButton = document.querySelector(".profile__save");
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user.avatar) {
+    userAvatarPreview.src = `http${API_URL_PART}/${
+      IS_HOSTED_STATIC ? "static/avatars/" : ""
+    }${user.avatar}`;
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener("change", async function (e) {
+      let imageFromInput = await getFileFromInput(fileInput);
+      if (imageFromInput == null) {
+        return;
+      }
+      if (userAvatarPreview) {
+        userAvatarPreview.src = imageFromInput;
+      }
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+      const response = await impHttp.setUserAvatar(formData);
+      if (response.status == 200) {
+        let newUser = {
+          username: response.data.username,
+          balance: response.data.balance,
+          name: response.data.name,
+          userId: response.data.id,
+          email: response.data.email,
+          avatar: response.data.avatar,
+          isAdmin: response.data.isAdmin,
+          seeDominoClassic: response.data.seeDominoClassic,
+          seeDominoTelephone: response.data.seeDominoTelephone,
+        };
+        localStorage.setItem("user", JSON.stringify(newUser));
+      }
+    });
+  }
+
+  const removeAvatarButton = thisPage.querySelector(".profile-avatar__close");
+  if (removeAvatarButton) {
+    removeAvatarButton.addEventListener("click", async () => {
+      const response = await impHttp.removeUserAvatar();
+    });
+  }
+
+  const saveButton = thisPage.querySelector(".profile__save");
 
   saveButton.addEventListener("click", async () => {
     const name = nameInput.value || localUser.name;
@@ -917,7 +944,7 @@ async function openUserDetails() {
           siteLanguage.profilePage.myGamesPage.statsItem.errorText
         );
       }
-      console.log(response.data);
+      // // console.log(response.data);
     }
   });
 
@@ -931,6 +958,34 @@ async function openUserDetails() {
     await openTransactions();
   });
 
+  // кнопка изменения цвета
+  const localCaskColor = localStorage.getItem("cask-color");
+  const colors = document.querySelectorAll(".casks-block .setting-cask");
+  colors.forEach((color) => {
+    color.classList.remove("active");
+
+    if (color.getAttribute("color") == localCaskColor) {
+      color.classList.add("active");
+    }
+  });
+
+  colors.forEach((color) => {
+    color.addEventListener("click", () => {
+      colors.forEach((color) => color.classList.remove("active"));
+      color.classList.add("active");
+      localStorage.setItem("cask-color", color.getAttribute("color"));
+    });
+  });
+
+  // ставим active для кнопки с цветом из localstorage
+  const caskColor = localStorage.getItem("cask-color");
+  if (caskColor) {
+    const cask = document.querySelector(`.setting-cask[color=${caskColor}]`);
+    if (cask) {
+      cask.classList.add("active");
+    }
+  }
+
   const goBackButton = document.querySelector(".go-back");
   goBackButton.addEventListener("click", function () {
     openProfilePage();
@@ -941,9 +996,9 @@ async function openUserGames() {
   let siteLanguage = window.siteLanguage;
   let main = document.querySelector(".main__container");
   if (main) {
-    const {data} = await impHttp.getUserGames();
-    const {lotoGames, dominoGames} = data;
-    console.log(data, lotoGames)
+    const { data } = await impHttp.getUserGames();
+    const { lotoGames, dominoGames } = data;
+    // // console.log(data, lotoGames);
     main.innerHTML = `
       <div class="main__container">
         <section class="user-game-history">
@@ -982,8 +1037,19 @@ async function openUserGames() {
         `${game.isWinner ? "won" : "lose"}`,
         `game-item-${index}`
       );
-      gameitem.setAttribute("date", game.createdAt)
+      gameitem.setAttribute("date", game.createdAt);
+
+      const dateTime = new Date(game.createdAt);
+
+      let gameDate = dateTime.toISOString().split("T")[0].split("-");
+      gameDate = gameDate.reverse().join(".");
+
+      let gameTime = dateTime.toISOString().split("T")[1].split(".")[0];
+      gameTime = gameTime.split(":").slice(0, 2).join(":");
       gameitem.innerHTML = `
+        <div class="game-item__date">
+            ${gameDate}
+        </div>
         <div class="game-item__tickets-block">
           <!-- tickets -->
         </div>
@@ -1040,10 +1106,7 @@ async function openUserGames() {
         ".game-item__tickets-block"
       );
       if (ticketsBodyBlock) {
-        createHistoryUserTickets(
-          ticketsBodyBlock,
-          lotoGames[index].tickets
-        );
+        createHistoryUserTickets(ticketsBodyBlock, lotoGames[index].tickets);
       }
 
       // убираем навигацию сайта
@@ -1062,31 +1125,93 @@ async function openUserGames() {
         `${game.isWinner ? "won" : "lose"}`,
         `game-item-${index}`
       );
-      gameitem.setAttribute("date", game.createdAt)
+      gameitem.setAttribute("date", game.createdAt);
+
+      const { bet } = impDominoNav.getDominoRoomBetInfo(game.roomId);
+
+      // "game": "Игра",
+      // "won": "выиграна",
+      // "lost": "проиграна",
+      // "room": "Комната",
+      // "table": "Стол",
+      // "playersAmount": "Количество игроков",
+      // "gameMode": "Режим",
+      // "classic": "классический",
+      // "telephone": "телефон",
+      // "bet": "Ставка",
+      // "pureWin": "Чистый выигрыш",
+      // "totalBank": "Общий банк",
+      // "roomCommission": "Комиссия комнаты"
+
+      const dateTime = new Date(game.createdAt);
+
+      let gameDate = dateTime.toISOString().split("T")[0].split("-");
+      gameDate = gameDate.reverse().join(".");
+
+      let gameTime = dateTime.toISOString().split("T")[1].split(".")[0];
+      gameTime = gameTime.split(":").slice(0, 2).join(":");
 
       gameitem.innerHTML = `
-        <p>Домино</p>
-        <p>Игра ${game.isWinner ? "выиграна" : "проиграна"}!</p>
-        ${game.isWinner ? `<p>Выигрыш: ${game.winSum.toFixed(2)}₼</p>` : ""}
-        <p>Комната: ${game.roomId}</p>
-        <p>Стол: ${game.tableId}</p>
-        <p>Количество игроков: ${game.playerMode}</p>
-        <p>Режим: ${game.gameMode == "CLASSIC" ? "классический" : "телефон"}</p>
-      `
+        <div class="game-item__date">
+            ${gameDate} 
+        </div>
+        <p>${siteLanguage.statsPage.menuHeader.gameBackgamonsText}</p>
+        <p class="game-item__isWon">${
+          siteLanguage.profilePage.myGamesPage.statsItem.game
+        } <span> ${
+        game.isWinner
+          ? siteLanguage.profilePage.myGamesPage.statsItem.won
+          : siteLanguage.profilePage.myGamesPage.statsItem.lost
+      }!</span></p>
+        <p>${siteLanguage.profilePage.myGamesPage.statsItem.room}: ${
+        game.roomId
+      }</p>
+        <p>${siteLanguage.profilePage.myGamesPage.statsItem.table}: ${
+        game.tableId
+      }</p>
+        <p>${siteLanguage.profilePage.myGamesPage.statsItem.playersAmount}: ${
+        game.playerMode
+      }</p>
+        <p>${siteLanguage.profilePage.myGamesPage.statsItem.gameMode}: ${
+        game.gameMode == "CLASSIC"
+          ? siteLanguage.profilePage.myGamesPage.statsItem.classic
+          : siteLanguage.profilePage.myGamesPage.statsItem.telephone
+      }</p>
+        <p>${siteLanguage.profilePage.myGamesPage.statsItem.bet}: ${bet.toFixed(
+        2
+      )}₼</p>
+        ${
+          game.isWinner
+            ? `<p>${
+                siteLanguage.profilePage.myGamesPage.statsItem.pureWin
+              }: ${game.winSum.toFixed(2)}₼</p>
+              <p>${
+                siteLanguage.profilePage.myGamesPage.statsItem.winCommission
+              }: ${(game.winSum + bet).toFixed(2)}₼</p>
+              `
+            : `${siteLanguage.profilePage.myGamesPage.statsItem.totalBank}: ${(
+                bet * game.playerMode
+              ).toFixed(2)}₼`
+        }
+        <p>${
+          siteLanguage.profilePage.myGamesPage.statsItem.roomCommission
+        }: 15%</p>
+      `;
 
       mainBlock.insertBefore(gameitem, mainBlock.firstChild);
-    })
+    });
 
     // sort all games by date
     let games = document.querySelectorAll(".game-item");
     games = [...games];
     games.sort((a, b) => {
-      return new Date(b.getAttribute("date")) - new Date(a.getAttribute("date"));
+      return (
+        new Date(b.getAttribute("date")) - new Date(a.getAttribute("date"))
+      );
     });
     games.forEach((game) => {
       mainBlock.appendChild(game);
     });
-    
   }
 }
 
@@ -1135,6 +1260,12 @@ async function openUserBonuses() {
     header.classList.remove("d-none");
     main.classList.add("header__padding");
   }
+  // убираем навигацию сайта
+  let footer = document.querySelector("#footer");
+  if (footer && !footer.classList.contains("d-none")) {
+    footer.classList.add("d-none");
+    main.classList.remove("footer__padding");
+  }
   main.innerHTML = `
   <div class="change-tokens-page">
   
@@ -1149,7 +1280,7 @@ async function openUserBonuses() {
       <div class="change-tokens-page-form__block">
         <div class="change-tokens-page-form__block-row">
           <p>${siteLanguage.profilePage.bonusesPage.pointToChangeText}</p>
-          <input type="number" />
+          <input type="number" max="9999" maxlength="4" pattern="[0-9]{4}" class="change-tokens-input" />
         </div>
         <div class="change-tokens-page-form__block-row">
           <div class="get-sum-block">  <p>${siteLanguage.profilePage.bonusesPage.pointToGetText}:</p>
@@ -1169,6 +1300,13 @@ async function openUserBonuses() {
   </div>
 </div>
   `;
+
+  const changeTokensInput = document.querySelector(".change-tokens-input");
+  changeTokensInput.addEventListener("input", () => {
+    // make 4 digits max
+    changeTokensInput.value = changeTokensInput.value.replace(/[^0-9]/g, "");
+    changeTokensInput.value = changeTokensInput.value.slice(0, 4);
+  });
 
   const exitButton = document.querySelector(".change-tokens-page__exit-button");
   exitButton.addEventListener("click", function () {
@@ -1336,7 +1474,6 @@ export function openChangePasswordForm() {
     openProfilePage();
   });
 }
-
 async function openPayments() {
   let siteLanguage = window.siteLanguage;
   const main = document.querySelector(".main__container");
@@ -1406,16 +1543,32 @@ async function openPayments() {
       if (payout.checked) {
         paymentItem.classList.add("accepted");
       }
-      console.log(typeof payout.checked, payout.checked);
+      // // console.log(typeof payout.checked, payout.checked);
       paymentItem.innerHTML = `
-        <div class="user-withdraw-item__item item-username">${user.username}</div>
-        <div class="user-withdraw-item__item item-games">${user.stat.gameLotoPlayed}</div>
-        <div class="user-withdraw-item__item item-topup">${user.stat.deposited}</div>
-        <div class="user-withdraw-item__item item-withdraw">${payout.withdrawAmount}</div>
-        <div class="user-withdraw-item__item item-card">${payout.cardNumber}</div>
-        <div class="user-withdraw-item__item item-card-name">${payout.cardHolder}</div>
-        <div class="user-withdraw-item__item item-card-date">${payout.validity}</div>
-        <input class="user-withdraw-item__item item-card-checked" type="checkbox" name="" payoutId=${payout.id} id="">
+        <div class="user-withdraw-item__item item-username">${
+          user.username
+        }</div>
+        <div class="user-withdraw-item__item item-games">${
+          user.stat.gameLotoPlayed + user.stat.gameDominoPlayed
+        }</div>
+        <div class="user-withdraw-item__item item-topup">${
+          user.stat.deposited
+        }</div>
+        <div class="user-withdraw-item__item item-withdraw">${
+          payout.withdrawAmount
+        }</div>
+        <div class="user-withdraw-item__item item-card">${
+          payout.cardNumber
+        }</div>
+        <div class="user-withdraw-item__item item-card-name">${
+          payout.cardHolder
+        }</div>
+        <div class="user-withdraw-item__item item-card-date">${
+          payout.validity
+        }</div>
+        <input class="user-withdraw-item__item item-card-checked" type="checkbox" name="" payoutId=${
+          payout.id
+        } id="">
       `;
 
       tableBody.appendChild(paymentItem);
@@ -1490,7 +1643,7 @@ async function openTransactions() {
   }
 
   const { data: users } = await impHttp.getPayouts();
-  console.log(users[0]);
+  // // console.log(users[0]);
   let transactions = [];
   const userId = localUser.userId;
   users.forEach((user) => {
@@ -1543,4 +1696,70 @@ async function getProfileInfo() {
   return userInfo;
 }
 
-export function openUserStatsPopup() {}
+function getManyFilesFromInput(input) {
+  let inputButton = input;
+  // let prewiewBlock = thisForm.querySelector(".image-preview");
+  let files = inputButton.files || inputButton.currentTarget.files;
+  let reader = [];
+  let image = null;
+
+  for (let i = 0; i < files.length; i++) {
+    reader[i] = new FileReader();
+    reader[i].readAsDataURL(files[i]);
+    reader[i].onload = () => {
+      // let img = document.createElement("img");
+      // img.classList.add("image-preview__img");
+      // img.src = reader[i].result;
+      // prewiewBlock.innerHTML = "";
+      // prewiewBlock.appendChild(img);
+
+      image = reader[i].result;
+      console.log(reader[i].result);
+      return reader[i].result;
+    };
+  }
+
+  return image;
+}
+
+async function getFileFromInput(input) {
+  let siteLanguage = window.siteLanguage;
+
+  return new Promise((resolve, reject) => {
+    let inputButton = input;
+    let file = inputButton.files[0];
+
+    if (
+      file.type != "image/png" &&
+      file.type != "image/jpg" &&
+      file.type != "image/jpeg"
+    ) {
+      impPopup.openErorPopup(siteLanguage.popups.unsupportedExtension);
+      return null;
+    }
+
+    const maxSizeInBytes = 1.5 * 1024 * 1024; // 2.5 MB в байтах
+
+    if (file.size > maxSizeInBytes) {
+      impPopup.openErorPopup(siteLanguage.popups.maxsizefile);
+      return;
+    }
+
+    let reader = new FileReader();
+
+    reader.onload = (event) => {
+      let image = event.target.result;
+      resolve(image); // Повертаємо результат у разі успішного завершення читання файлу
+    };
+
+    reader.onerror = (error) => {
+      reject(error); // У випадку помилки повертаємо об'єкт помилки
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      reject(new Error("Файл не обраний")); // Повертаємо помилку, якщо файл не обраний
+    }
+  });
+}

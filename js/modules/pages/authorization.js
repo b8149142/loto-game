@@ -1,10 +1,12 @@
 import * as impHttpRequests from "../http.js";
 import * as impInterface from "../authinterface.js";
 import * as impNav from "../navigation.js";
+import * as impDominoNav from "../../modules/domino/domino-navigation.js";
 // import * as impLotoNav from "./loto-navigation.js";
 import * as impWSNavigation from "../ws-navigation.js";
 import * as impAdminNav from "./admin-navigation.js";
 import * as impPopup from "./popup.js";
+import * as impLocalization from "../localize.js";
 
 export function registrationForm() {
   // let openFormButtons = document.querySelectorAll(".open-registration");
@@ -173,7 +175,7 @@ export function createRegistrationForm() {
       // registrationPopup.classList.remove("opened");
       // alert("Аккаунт создан, войдите в него");
       createLoginForm();
-      impPopup.open(siteLanguage.popups.registrationSuccess, 200);
+      impPopup.open(siteLanguage.popups.registrationSuccess);
     } else {
       switch (response.data.message) {
         case "ERR_USERNAME_ALREADY_EXISTS":
@@ -200,7 +202,7 @@ export function createLoginForm() {
   let form = registrationPopup.querySelector(".registration-form");
   let formHeaderText = form.querySelector(".form-header__heading");
   formHeaderText.innerHTML = siteLanguage.authPage.login.title;
-
+  const preloader = document.querySelector(".preloader");
   let formBody = form.querySelector(".form-body");
 
   formBody.innerHTML = `<div class="form-body-login">
@@ -248,32 +250,41 @@ export function createLoginForm() {
       // show auth interface
       registrationPopup.classList.remove("opened");
       impInterface.showUserInterface(response.data.user);
-
-      console.log(response.data);
       let user = {
         username: response.data.user.username,
         balance: response.data.user.balance,
         name: response.data.user.name,
         userId: response.data.user.id,
         email: response.data.user.email,
+        avatar: response.data.user.avatar,
         isAdmin: response.data.user.isAdmin,
+        seeDominoClassic: response.data.user.seeDominoClassic,
+        seeDominoTelephone: response.data.user.seeDominoTelephone,
       };
 
       localStorage.setItem("user", JSON.stringify(user));
+      window.isAdmin = response.data.user.isAdmin;
 
       if (await isAuth()) {
         let ws = impWSNavigation.connectWebsocketFunctions();
         impNav.addHashListeners(ws);
         // impNav.addHashListenersWS(ws);
-        impNav.addListeners(ws);
+        // impNav.addListeners(ws);
+        // impNav.addListeners(ws);
+        location.hash = "#gamemode-choose";
+        impDominoNav.dominoChoosePageListeners();
+        impLocalization.translateGameChooseMenu();
+
         impNav.pageNavigation(ws);
         // проверка на активные игры в лото в даный момент
 
         let currentGames = await impNav.checkUserCurrentGames();
-        console.log(currentGames);
+
         switch (currentGames.currGame) {
           case "free":
-            preloader.classList.add("d-none");
+            if (preloader) {
+              preloader.classList.add("d-none");
+            }
             break;
           case "loto":
             if (currentGames.gameStarted) {
@@ -302,13 +313,12 @@ export function createLoginForm() {
             break;
         }
       }
-      console.log(response.data.user.isAdmin);
+
       if (response.data.user.isAdmin) {
         impAdminNav.createAdminButton();
       }
     } else {
       const errorBlock = document.querySelector(".auth-form-error");
-
       errorBlock.innerHTML = siteLanguage.popups.registrationError;
     }
   });
@@ -334,24 +344,29 @@ export async function getUser() {
 
 export async function isAuth() {
   let response = await impHttpRequests.checkAuth();
-  console.log(response);
+
   if (
-    (response?.status == 200 || response?.statusText == "OK") &&
-    response?.data?.username
+    (response.status == 200 || response.statusText == "OK") &&
+    response.data.username
   ) {
     let registrationPopup = document.querySelector(".registration");
     registrationPopup.classList.remove("opened");
     impInterface.showUserInterface(response.data);
-
+    // console.log(response.data);
     let user = {
       username: response.data.username,
       balance: response.data.balance,
       name: response.data.name,
       userId: response.data.id,
       email: response.data.email,
+      avatar: response.data.avatar,
       isAdmin: response.data.isAdmin,
+      seeDominoClassic: response.data.seeDominoClassic,
+      seeDominoTelephone: response.data.seeDominoTelephone,
     };
+
     localStorage.setItem("user", JSON.stringify(user));
+    window.isAdmin = response.data.isAdmin;
 
     return true;
   } else {

@@ -8,21 +8,26 @@ import * as impMoveElement from "./modules/move-element.js";
 import * as impLocalization from "./modules/localize.js";
 import * as impPopup from "./modules/pages/popup.js";
 import * as impDominoGame from "./modules/domino/domino-game.js";
+import * as impDominoNav from "./modules/domino/domino-navigation.js";
 window.ws = null;
+
 // impDominoGame.tablePlacement();
 
 let preloader = document.querySelector(".page-preloader");
 let siteLanguage = await impLocalization.getCurrentSiteLang();
 window.siteLanguage = siteLanguage;
-impLocalization.translateMainPage();
+// impLocalization.translateMainPage();
 impLocalization.translateAuthPage();
-console.log(siteLanguage);
+impLocalization.translateGameChooseMenu();
+
 impAuth.registrationForm();
 impAuth.createLoginForm();
 
 impNav.applyDefaultSettings();
 
 impNav.addUnauthorizedHashListeners();
+
+window.scrollTo(0, 0);
 
 if (await impAuth.isAuth()) {
   // preloader.classList.remove("d-none");
@@ -33,12 +38,34 @@ if (await impAuth.isAuth()) {
     impAdminNav.createAdminButton();
   }
   let ws = impWSNavigation.connectWebsocketFunctions();
+  // setInterval(() => {
+  //   ws.send(JSON.stringify({ method: "ping" }));
+  // }, 20000);
   impNav.pageNavigation(ws);
   impNav.addHashListeners(ws);
   // impNav.addHashListenersWS(ws);
 
-  impNav.addListeners(ws);
+  // надо для лото на первой странице
+  // impNav.addListeners(ws);
+
+  location.hash = "#gamemode-choose";
+  impDominoNav.dominoChoosePageListeners();
+
+  window.scrollTo(0, 0);
+
   // preloader.classList.add("d-none");
+
+  // let navMenu = document.querySelector(".menu-footer");
+  // if (navMenu) {
+  //   const navButtons = navMenu.querySelectorAll(".active");
+  //   navButtons.forEach((button) => button.classList.remove("active"));
+  //   let openGamesLobbyBtn = document.querySelector(".open-games-menu");
+  //   openGamesLobbyBtn.classList.add("active");
+  // }
+
+  // impDominoNav.openDominoChoosePage();
+} else {
+  console.log("not auth");
 }
 
 // розблокировать чат после f5 а то он будет заблочен
@@ -52,3 +79,7 @@ window.addEventListener("offline", (event) => {
     `${siteLanguage.popups.connectionErrorText}`
   );
 });
+
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+};

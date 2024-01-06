@@ -246,6 +246,10 @@
   background-color: inherit;
   margin: 0 auto;
   margin-top: 40px;
+  background: var(--Linear, linear-gradient(180deg, #78010b 0%, #d32433 100%));
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid #fff;
 }
 .change-tokens-page
   .change-tokens-page-form

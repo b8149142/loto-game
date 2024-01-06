@@ -206,3 +206,73 @@ th {
   margin-bottom: 5px;
   border-bottom: 0.5px solid #333;
 }
+
+.date-stats-domino-classic-table {
+  margin: 0 auto;
+  max-width: max-content;
+}
+
+.date-stats-domino-classic-table .date-stats-item,
+.date-stats-domino-classic-table .date-stats-header {
+  padding: 5px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 150px);
+  text-align: center;
+  column-gap: 20px;
+}
+
+.date-stats-domino-telephone-table {
+  margin: 0 auto;
+  max-width: max-content;
+}
+.date-stats-domino-telephone-table .date-stats-item,
+.date-stats-domino-telephone-table .date-stats-header {
+  padding: 5px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 150px);
+  text-align: center;
+  column-gap: 20px;
+}
+
+.room-management-room {
+  background-color: #fff;
+  padding-bottom: 20px;
+}
+
+.room-management-room * {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.room-management-room header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.room-management-bets {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.room-management-bets li {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.room-management-bets input {
+  margin-right: 10px;
+}
+
+.room-management-bets span {
+  font-size: 14px;
+}
+
+.room-management-button {
+  background-color: #fff;
+  color: #333;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}

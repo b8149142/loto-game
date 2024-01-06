@@ -32,6 +32,10 @@ a {
   user-select: none;
 }
 
+.bg-red {
+  background-color: #a9010b;
+}
+
 .page-preloader {
   position: fixed;
   top: 0;

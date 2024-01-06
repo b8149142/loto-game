@@ -1,6 +1,8 @@
 // export const API_URL = "https://app.24loto.com/api";
-export const API_URL = "https://lotogame.onrender.com/api";
+// export const API_URL = "https://lotogame.onrender.com/api";
 // export const API_URL = "https://loto-server-new.onrender.com/api";
+import { API_URL_PART } from "./config.js";
+export const API_URL = `http${API_URL_PART}/api`;
 
 const $api = axios.create({
   withCredentials: false,
@@ -432,6 +434,16 @@ export async function getPlayedGames() {
   }
 }
 
+export async function getPlayedDominoGames() {
+  try {
+    const response = await $api.get(`/played-domino-games`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
 export async function getDominoStatus() {
   try {
     const response = await $api.get("/game/domino-status");
@@ -450,6 +462,57 @@ export async function isDominoStarted(roomId, tableId, playerMode, gameMode) {
       playerMode,
       gameMode,
     });
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getIsPageAvailable(page) {
+  try {
+    const response = await $api.get(`/is-page-available/${page}`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function getRoomsControl() {
+  try {
+    const response = await $api.get(`/rooms-control`);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function updateRoomsControl(roomsControl, mode) {
+  try {
+    const response = await $api.put(`/rooms-control/${mode}`, roomsControl);
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function setUserAvatar(formData) {
+  try {
+    const response = await $api.postForm(`/uploadAvatar`, formData);
+
+    return await response;
+  } catch (e) {
+    console.log(e.response);
+    return await e.response;
+  }
+}
+
+export async function removeUserAvatar() {
+  try {
+    const response = await $api.delete(`/uploadAvatar`);
     return await response;
   } catch (e) {
     console.log(e.response);

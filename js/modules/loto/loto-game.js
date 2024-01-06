@@ -564,7 +564,7 @@ function checkChoosedCasks(ws, pastCasks) {
                 ticketsInfo
                   .find((item) => item.ticketId == ticket.getAttribute("id"))
                   .unavailableCasks.push(+cell.innerHTML);
-                console.log(ticketsInfo);
+
                 localStorage.setItem(
                   "ticketsInfo",
                   JSON.stringify(ticketsInfo)
